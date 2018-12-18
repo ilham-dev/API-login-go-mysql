@@ -121,7 +121,8 @@ func register(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		http.Redirect(w, r, "/register", 302)
+		res := statusRes{Status: 400, Msg: "Method Must be post"}
+		json.NewEncoder(w).Encode(res)
 	}
 }
 
@@ -133,7 +134,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(res)
 	}
 	if r.Method != "POST" {
-		res := statusRes{Status: 400, Msg: "Method Must Be POST"}
+		res := statusRes{Status: 400, Msg: "Method Must be post"}
 		json.NewEncoder(w).Encode(res)
 	}
 	username := r.FormValue("username")
