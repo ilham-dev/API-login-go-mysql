@@ -25,7 +25,7 @@ type user struct {
 }
 
 func connect_db() {
-	db, err = sql.Open("mysql", "root:@tcp(127.0.0.1)/test")
+	db, err = sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/test")
 
 	if err != nil {
 		log.Fatalln(err)
@@ -49,7 +49,7 @@ func main() {
 
 	defer db.Close()
 
-	fmt.Println("Server running on port :8000")
+	fmt.Println("Server running on port :8001")
 	http.ListenAndServe(":8001", nil)
 }
 
