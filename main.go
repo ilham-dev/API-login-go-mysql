@@ -22,10 +22,11 @@ type user struct {
 	FirstName string
 	LastName  string
 	Password  string
+	Email     string
 }
 
 func connect_db() {
-	db, err = sql.Open("mysql", "root:root@tcp(127.0.0.1:8889)/test")
+	db, err = sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/go_api")
 
 	if err != nil {
 		log.Fatalln(err)
@@ -77,8 +78,9 @@ func QueryUser(username string) user {
 		username, 
 		first_name, 
 		last_name, 
-		password 
-		FROM login WHERE username=?
+		password,
+		email
+		FROM users WHERE username=?
 		`, username).
 		Scan(
 			&users.ID,
@@ -86,6 +88,7 @@ func QueryUser(username string) user {
 			&users.FirstName,
 			&users.LastName,
 			&users.Password,
+			&users.Email,
 		)
 	return users
 }
@@ -108,7 +111,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 
 		if len(hashedPassword) != 0 && checkErr(w, r, err) {
-			stmt, err := db.Prepare("INSERT INTO login SET username=?, password=?, first_name=?, last_name=?, email=?")
+			stmt, err := db.Prepare("INSERT INTO users SET username=?, password=?, first_name=?, last_name=?, email=?")
 			if err == nil {
 				_, err := stmt.Exec(&username, &hashedPassword, &first_name, &last_name, &email)
 				if err != nil {
